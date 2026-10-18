@@ -20,4 +20,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Semgrep SAST Scan
-        run: semgrep scan --config "p/c" --config "p/security-audit" --config "p/owasp-top-ten" --config "p/golang" --config "p/cwe-top-25"
+        run: semgrep scan --config "p/c" --config "p/security-audit" --config "p/owasp-top-ten" --config "p/golang" --config "p/cwe-top-25" --error
