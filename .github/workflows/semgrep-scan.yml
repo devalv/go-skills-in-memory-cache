@@ -17,7 +17,7 @@ jobs:
       image: semgrep/semgrep
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  #v7
 
       - name: Semgrep SAST Scan
         run: semgrep scan --config "p/c" --config "p/security-audit" --config "p/owasp-top-ten" --config "p/golang" --config "p/cwe-top-25" --error
