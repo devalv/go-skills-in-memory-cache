@@ -4,6 +4,7 @@ fmt:
 	golangci-lint run --fix ./examples/... ./naive/...
 
 test-basic:
+	go clean -testcache
 	go test ./... -race -timeout=5m -v
 
 cover-basic:

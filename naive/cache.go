@@ -1,37 +1,56 @@
 package naive
 
-import "sync"
+import (
+	"errors"
+)
 
-// Cache is a concurrency-safe in-memory cache with no eviction or expiration.
-// Its zero value is ready to use. A Cache must not be copied after first use.
-type Cache[K comparable, V any] struct {
-	mu    sync.RWMutex
-	items map[K]V
+var (
+	ErrInvalidCapacity = errors.New("cache capacity must be non-negative")
+	ErrFullCapacity    = errors.New("cache capacity is full")
+)
+
+type Cache interface {
+	Set(k, v string)
+	Get(k string) (string, bool)
 }
 
-func New[K comparable, V any]() *Cache[K, V] {
-	return &Cache[K, V]{items: make(map[K]V)}
+type InMemoryCache struct {
+	data map[string]string
+	cap  int
 }
 
-func (c *Cache[K, V]) Set(key K, value V) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	if c.items == nil {
-		c.items = make(map[K]V)
+func New(capacity int) (*InMemoryCache, error) {
+	if capacity < 1 {
+		return nil, ErrInvalidCapacity
 	}
-	c.items[key] = value
+
+	return &InMemoryCache{
+		data: make(map[string]string),
+		cap:  capacity,
+	}, nil
 }
 
-func (c *Cache[K, V]) Get(key K) (V, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	value, ok := c.items[key]
+func (c *InMemoryCache) Set(k, v string) error {
+	_, present := c.data[k]
 
-	return value, ok
+	if !present && len(c.data) >= c.cap {
+		return ErrFullCapacity
+	}
+	c.data[k] = v
+
+	return nil
 }
 
-func (c *Cache[K, V]) Delete(key K) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	delete(c.items, key)
+func (c *InMemoryCache) Get(k string) (string, bool) {
+	data, ok := c.data[k]
+
+	return data, ok
 }
+
+func (c *InMemoryCache) Delete(k string) {
+	delete(c.data, k)
+}
+
+// TODO: аргумент с lock/mu
+// TODO: тесты с лок и без лок
+// TODO: лок и анлок - сравнить скорость обычного и рв мутекс
