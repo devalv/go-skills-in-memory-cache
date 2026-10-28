@@ -1,0 +1,23 @@
+name: Semgrep Security Scan
+
+on:
+  pull_request:
+    paths:
+      - "examples/**"
+      - "naive/**"
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep-sast:
+    runs-on: ubuntu-latest
+    container:
+      # A Docker image with Semgrep installed. Do not change this.
+      image: semgrep/semgrep
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  #v7
+
+      - name: Semgrep SAST Scan
+        run: semgrep scan --config "p/c" --config "p/security-audit" --config "p/owasp-top-ten" --config "p/golang" --config "p/cwe-top-25" --error

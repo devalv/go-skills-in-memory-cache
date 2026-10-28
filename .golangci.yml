@@ -1,0 +1,47 @@
+# https://golangci-lint.run/docs/configuration/file/
+version: "2"
+
+linters:
+  default: all
+  disable:
+    - mnd
+    - exhaustruct_v5
+    - wsl
+    - wsl_v5
+    - depguard
+    - err113
+    - noinlineerr
+    - nonamedreturns
+    - revive
+    - varnamelen
+    - exhaustruct
+    - tagliatelle
+    - godox
+    - gomodguard
+    - forbidigo
+    - ireturn
+  settings:
+    funlen:
+      lines: 150
+      statements: 75
+    cyclop:
+      max-complexity: 25
+
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true
+    goimports:
+      local-prefixes:
+        - github.com/devalv/wb-current-weather
+  exclusions:
+    paths:
+      - ".*\\.pb\\.go"  # Exclude protobuf generated files
+
+run:
+  timeout: 5m
+  tests: false
