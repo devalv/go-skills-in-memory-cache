@@ -5,7 +5,7 @@ fmt:
 
 test-basic:
 	go clean -testcache
-	go test ./... -race -timeout=5m -v
+	go test ./... -race -timeout=5m -v -count=10
 
 cover-basic:
 	go test ./... -race -cover

@@ -2,6 +2,7 @@ package naive
 
 import (
 	"errors"
+	"sync"
 )
 
 var (
@@ -17,6 +18,7 @@ type Cache interface {
 type InMemoryCache struct {
 	data map[string]string
 	cap  int
+	mu   sync.RWMutex
 }
 
 func New(capacity int) (*InMemoryCache, error) {
@@ -31,8 +33,11 @@ func New(capacity int) (*InMemoryCache, error) {
 }
 
 func (c *InMemoryCache) Set(k, v string) error {
-	_, present := c.data[k]
+	// TODO: Cache[K comparable, V any] -> gnaive/cache
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
+	_, present := c.data[k]
 	if !present && len(c.data) >= c.cap {
 		return ErrFullCapacity
 	}
@@ -42,15 +47,15 @@ func (c *InMemoryCache) Set(k, v string) error {
 }
 
 func (c *InMemoryCache) Get(k string) (string, bool) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 	data, ok := c.data[k]
 
 	return data, ok
 }
 
 func (c *InMemoryCache) Delete(k string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	delete(c.data, k)
 }
-
-// TODO: аргумент с lock/mu
-// TODO: тесты с лок и без лок
-// TODO: лок и анлок - сравнить скорость обычного и рв мутекс

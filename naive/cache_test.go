@@ -2,6 +2,8 @@ package naive
 
 import (
 	"errors"
+	"strconv"
+	"sync"
 	"testing"
 )
 
@@ -49,4 +51,40 @@ func TestCacheZeroCap(t *testing.T) {
 		t.Fatalf("wrong error type: got (%e)", err)
 	}
 
+}
+
+func TestThreadSafe(t *testing.T) {
+	const (
+		goroutines = 100
+		operations = 1000
+	)
+
+	cache, err := New(1000)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var wg sync.WaitGroup
+
+	for i := range goroutines {
+		wg.Add(1)
+
+		go func(id int) {
+			defer wg.Done()
+
+			for j := range operations {
+				key := strconv.Itoa(j)
+				value := strconv.Itoa(id)
+
+				cache.Set(key, value)
+				cache.Get(key)
+
+				if j%2 == 0 {
+					cache.Delete(key)
+				}
+			}
+		}(i)
+	}
+
+	wg.Wait()
 }

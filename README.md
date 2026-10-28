@@ -12,3 +12,7 @@ go-skills-in-memory-cache/
     └── basic/
         └── main.go
 ```
+
+
+## naive/cache.go
+Потокобезопасный, но, только string/string
