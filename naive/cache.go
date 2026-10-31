@@ -13,6 +13,7 @@ var (
 type Cache interface {
 	Set(k, v string)
 	Get(k string) (string, bool)
+	Delete(k string)
 }
 
 type InMemoryCache struct {
@@ -33,7 +34,6 @@ func New(capacity int) (*InMemoryCache, error) {
 }
 
 func (c *InMemoryCache) Set(k, v string) error {
-	// TODO: Cache[K comparable, V any] -> gnaive/cache
 	c.mu.Lock()
 	defer c.mu.Unlock()
 

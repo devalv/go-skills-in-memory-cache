@@ -5,6 +5,7 @@ on:
     paths:
       - 'examples/**'
       - 'naive/**'
+      - 'gnaive/**'
       - 'go.mod'
       - 'go.sum'
       - '.golangci.yml'
@@ -30,4 +31,4 @@ jobs:
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: golangci-lint
-        run: golangci-lint run ./examples/... ./naive/...
+        run: golangci-lint run ./examples/... ./naive/... ./gnaive/...

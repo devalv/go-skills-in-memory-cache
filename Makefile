@@ -3,14 +3,25 @@ fmt:
 	go fix -diff ./...
 	golangci-lint run --fix ./examples/... ./naive/...
 
-test-basic:
+test-naive:
 	go clean -testcache
-	go test ./... -race -timeout=5m -v -count=10
+	go test ./naive -race -timeout=5m -v -count=10
 
-cover-basic:
-	go test ./... -race -cover
+test-gnaive:
+	go clean -testcache
+	go test ./gnaive -race -timeout=5m -v -count=10
 
-run-basic:
-	go run ./examples/basic
+cover-naive:
+	go test ./naive -race -cover
 
-.PHONY: fmt test cover run-basic
+cover-gnaive:
+	go test ./gnaive -race -cover
+
+
+run-naive:
+	go run ./examples/naive
+
+run-gnaive:
+	go run ./examples/gnaive
+
+.PHONY: fmt test-naive test-gnaive cover-naive cover-gnaive run-naive run-gnaive
