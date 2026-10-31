@@ -5,6 +5,7 @@ on:
     paths:
       - 'examples/**'
       - 'naive/**'
+      - 'gnaive/**'
       - 'go.mod'
       - 'go.sum'
       - '.golangci.yml'

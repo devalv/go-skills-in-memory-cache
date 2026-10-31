@@ -3,8 +3,9 @@ name: Semgrep Security Scan
 on:
   pull_request:
     paths:
-      - "examples/**"
-      - "naive/**"
+      - 'examples/**'
+      - 'naive/**'
+      - 'gnaive/**'
 
 permissions:
   contents: read
