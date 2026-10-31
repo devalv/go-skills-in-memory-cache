@@ -15,7 +15,7 @@ go-skills-in-memory-cache/
 │   └── naive/
 │       └── main.go
 └── examples/
-    └── naive/
+    └── gnaive/
         └── main.go
 ```
 
