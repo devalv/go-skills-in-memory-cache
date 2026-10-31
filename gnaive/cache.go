@@ -12,8 +12,8 @@ var (
 
 type Cache[K comparable, V any] interface {
 	Set(k K, v V) error
-    Get(k K) (V, bool)
-    Delete(k K)
+	Get(k K) (V, bool)
+	Delete(k K)
 }
 
 type InMemoryCache[K comparable, V any] struct {
