@@ -6,6 +6,7 @@ on:
       - 'examples/**'
       - 'naive/**'
       - 'gnaive/**'
+      - 'ttl/**'
 
 permissions:
   contents: read
