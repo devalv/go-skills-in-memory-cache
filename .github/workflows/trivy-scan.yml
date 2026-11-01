@@ -6,6 +6,7 @@ on:
       - 'examples/**'
       - 'naive/**'
       - 'gnaive/**'
+      - 'ttl/**'
       - 'go.mod'
       - 'go.sum'
       - '.golangci.yml'
