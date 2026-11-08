@@ -17,6 +17,9 @@ go-skills-in-memory-cache/
 ├── lru/
 │   ├── cache.go
 │   └── cache_test.go
+├── shards/
+│   ├── cache.go
+│   └── cache_test.go
 └── examples/
     ├── naive/
     │   └── main.go
@@ -24,7 +27,9 @@ go-skills-in-memory-cache/
     │   └── main.go
     ├── ttl/
     │   └── main.go
-    └── lru/
+    ├── lru/
+    │   └── main.go
+    └── shards/
         └── main.go
 ```
 
@@ -95,3 +100,25 @@ type Cache[K comparable, V any] interface {
 	FlushAll()
 }
 ```
+
+## shards/cache.go
+Потокобезопасный кеш с дженериками и шардированием ключей, без TTL, LRU и ограничения количества записей.
+
+```go
+func New[K comparable, V any](shardCount int) (*InMemoryCache[K, V], error)
+
+type Cache[K comparable, V any] interface {
+    Set(k K, v V) error
+    Get(k K) (V, bool)
+    FlushAll()
+}
+```
+
+Шард выбирается через стандартную `hash/maphash.Comparable` с неизменным seed кеша.
+Ключи сохраняются целиком: совпадение хешей не приводит к перезаписи разных ключей.
+Каждый шард содержит свою map и `sync.RWMutex`: `Set` блокирует только свой шард,
+а несколько `Get` одного шарда могут выполняться одновременно.
+`Set` возвращает `nil`. `FlushAll` блокирует все шарды в фиксированном порядке
+и атомарно очищает кеш относительно `Set` и `Get`.
+Обращения к одному ключу или разным ключам одного шарда используют общую блокировку;
+сходство значений не влияет на выбор шарда.

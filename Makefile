@@ -47,4 +47,13 @@ cover-lru:
 run-lru:
 	go run ./examples/lru
 
-.PHONY: fmt test-naive test-gnaive cover-naive cover-gnaive run-naive run-gnaive test-ttl cover-ttl run-ttl test-lru cover-lru run-lru
+test-shards:
+	go test ./shards -race -timeout=5m -v -count=10
+
+cover-shards:
+	go test ./shards -cover
+
+run-shards:
+	go run ./examples/shards
+
+.PHONY: fmt test-naive test-gnaive cover-naive cover-gnaive run-naive run-gnaive test-ttl cover-ttl run-ttl test-lru cover-lru run-lru test-shards cover-shards run-shards

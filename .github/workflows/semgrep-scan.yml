@@ -8,6 +8,7 @@ on:
       - 'gnaive/**'
       - 'ttl/**'
       - 'lru/**'
+      - 'shards/**'
 
 permissions:
   contents: read
