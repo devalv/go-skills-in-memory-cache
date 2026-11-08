@@ -1,4 +1,3 @@
-// Package lru provides a generic cache with least recently used eviction.
 package lru
 
 import (
