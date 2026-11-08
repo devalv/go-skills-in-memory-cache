@@ -7,6 +7,7 @@ on:
       - 'naive/**'
       - 'gnaive/**'
       - 'ttl/**'
+      - 'lru/**'
 
 permissions:
   contents: read

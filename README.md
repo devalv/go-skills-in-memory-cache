@@ -14,20 +14,27 @@ go-skills-in-memory-cache/
 ├── ttl/
 │   ├── cache.go
 │   └── cache_test.go
-├── examples/
-│   └── naive/
-│       └── main.go
-├── examples/
-│   └── gnaive/
-│       └── main.go
+├── lru/
+│   ├── cache.go
+│   └── cache_test.go
 └── examples/
-    └── ttl/
+    ├── naive/
+    │   └── main.go
+    ├── gnaive/
+    │   └── main.go
+    ├── ttl/
+    │   └── main.go
+    └── lru/
         └── main.go
 ```
 
 
 ## naive/cache.go
 Потокобезопасный, но, только string/string
+
+```go
+func New(capacity int) (*InMemoryCache, error) {
+```
 
 ```go
 type Cache[K comparable, V any] interface {
@@ -41,6 +48,10 @@ type Cache[K comparable, V any] interface {
 Потокобезопасный с использованием дженериков
 
 ```go
+func New[K comparable, V any](capacity int) (*InMemoryCache[K, V], error) {
+```
+
+```go
 type Cache[K comparable, V any] interface {
 	Set(k K, v V) error
 	Get(k K) (V, bool)
@@ -52,11 +63,35 @@ type Cache[K comparable, V any] interface {
 Потокобезопасный с использованием дженериков и TTL
 
 ```go
+func New[K comparable, V any](
+	capacity int,
+	ttl time.Duration,
+) (*InMemoryCache[K, V], error) {
+```
+
+```go
 type Cache[K comparable, V any] interface {
 	Set(k K, v V) error
 	SetWithTTL(k K, v V, ttl time.Duration) error
 	Get(k K) (V, bool)
 	FlushAll()
 	Close()
+}
+```
+
+## lru/cache.go
+Потокобезопасный кеш с дженериками и вытеснением наименее недавно использованного элемента (LRU), без TTL.
+Ограничение по cap
+
+```go
+func New[K comparable, V any](capacity int) (*InMemoryCache[K, V], error) {
+```
+
+
+```go
+type Cache[K comparable, V any] interface {
+	Set(k K, v V) error
+	Get(k K) (V, bool)
+	FlushAll()
 }
 ```

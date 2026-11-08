@@ -37,4 +37,14 @@ run-gnaive:
 run-ttl:
 	go run ./examples/ttl
 
-.PHONY: fmt test-naive test-gnaive cover-naive cover-gnaive run-naive run-gnaive test-ttl cover-ttl run-ttl
+test-lru:
+	go clean -testcache
+	go test ./lru -race -timeout=5m -v -count=10
+
+cover-lru:
+	go test ./lru -cover
+
+run-lru:
+	go run ./examples/lru
+
+.PHONY: fmt test-naive test-gnaive cover-naive cover-gnaive run-naive run-gnaive test-ttl cover-ttl run-ttl test-lru cover-lru run-lru
